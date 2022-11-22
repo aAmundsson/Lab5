@@ -11,6 +11,7 @@ public class Bergsmassiv extends fractal.Fractal {
         this.a = a;
         this.b = b;
         this.c = c;
+        this.dev = dev;
     }
 
     @Override
@@ -20,40 +21,35 @@ public class Bergsmassiv extends fractal.Fractal {
 
     @Override
     public void draw(TurtleGraphics g) {
-        g.moveTo(a.getX(),a.getY());
+        
         drawFractal(g, a, b, c, order, dev);
     }
 
     public void drawFractal(TurtleGraphics g, Point a, Point b, Point c, int order, double dev) {
-        Point a1, b1, c1, a2, b2, c2, a3, b3, c3;
+        double rand = RandomUtilities.randFunc(dev);
         if (order == 0) {
-            g.forwardTo(b.getX(), b.getY());
-            g.forwardTo(c.getX(), c.getY());
-            g.forwardTo(a.getX(), a.getY());
+        	g.moveTo(a.getX(), a.getY());
+            g.forwardTo(b.getX(), (b.getY()));
+            g.forwardTo(c.getX(), (c.getY()));
+            g.forwardTo(a.getX(), (a.getY()));
+            
         } else {
-            a1 = new Point(a.getX(), a.getY());
-            b1 = new Point((a.getX()+b.getX())/2, ((b.getY()+a.getY())/2) + (int) Math.round(RandomUtilities.randFunc(dev)));
-            System.out.println((int) Math.round(RandomUtilities.randFunc(dev)));
-            c1 = new Point((a.getX()+c.getX())/2, (c.getY()+a.getY())/2);
+        	Point ab, bc, ca ;
+            ab = new Point((a.getX() + b.getX())/2 , (a.getY() + b.getY() + (int)rand)/2);
+            bc = new Point((b.getX() + c.getX())/2 , (b.getY() + c.getY() + (int)rand)/2);
+            ca = new Point((c.getX() + a.getX())/2 , (c.getY() + a.getY() + (int)rand)/2);
+            
+            drawFractal(g, ab, b, bc, order-1, dev/2);
+            drawFractal(g, ca, bc, c, order-1, dev/2);
+            drawFractal(g, ab, bc, ca, order-1, dev/2);
+            drawFractal(g, a,ab, ca, order-1, dev/2);
+            
 
-            b2 = new Point(b.getX(), b.getY());
-            a2 = new Point((a.getX()+b.getX())/2, ((b.getY()+a.getY())/2) + (int) Math.round(RandomUtilities.randFunc(dev)));
-            c2 = new Point((b.getX()+c.getX())/2, (c.getY()+b.getY())/2);
+            
 
-            a3 =  new Point((a.getX()+c.getX())/2, (c.getY()+a.getY())/2);
-            b3 = new Point((b.getX()+c.getX())/2, ((c.getY()+b.getY())/2) + (int) Math.round(RandomUtilities.randFunc(dev)));
-            c3 = new Point(c.getX(), c.getY());
+            
 
-            g.moveTo(a3.getX(), a3.getY());
-            g.forwardTo(b3.getX(), b3.getY());
-            g.moveTo(a3.getX(), a3.getY());
-            g.forwardTo(a2.getX(), a2.getY());
-            g.moveTo(b3.getX(), b3.getY());
-            g.forwardTo(a2.getX(), a2.getY());
 
-            drawFractal(g, a1, b1, c1, order-1, dev/2);
-            drawFractal(g, a2, b2, c2, order-1, dev/2);
-            drawFractal(g, a3, b3, c3, order-1, dev/2);
         }
 
     }
